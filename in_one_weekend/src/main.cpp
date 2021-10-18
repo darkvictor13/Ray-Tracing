@@ -8,6 +8,8 @@
 #define IMG_WIDTH  256
 #define IMG_HEIGHT 256
 
+#include "color.hpp"
+
 int main (int argc, char *argv[]) {
     std::string file_name;
     if (argc == 2) {
@@ -32,9 +34,8 @@ int main (int argc, char *argv[]) {
     for (j = IMG_HEIGHT - 1; j >= 0; j--) {
         std::cout << "Faltam " << j << " linhas para gerar\n";
         for (i = 0; i < IMG_WIDTH; i++) {
-            file << static_cast<int>(255.999 * (double(i) / (IMG_WIDTH - 1)))  << ' ' <<
-                    static_cast<int>(255.999 * (double(j) / (IMG_HEIGHT - 1))) << ' ' <<
-                    static_cast<int>(255.999 * 0.25) << '\n';
+            Color pixel(double(i)/(IMG_WIDTH-1), double(j)/(IMG_HEIGHT-1), 0.25);
+            writeColor(file, pixel);
         }
     }
 
