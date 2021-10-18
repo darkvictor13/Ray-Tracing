@@ -28,32 +28,23 @@ struct Vector3d {
     Vector3d& operator /= (const double t);
 
     double lenghtSquared() const;
+
     double lenght() const;
 
     // funções auxiliares que recebem a classe como parâmetro
-    inline friend std::ostream& operator <<
-        (std::ostream &out, const Vector3d &v);
+    friend std::ostream& operator << (std::ostream &out, const Vector3d &v);
+    friend Vector3d operator + (const Vector3d &v1, const Vector3d &v2);
+    friend Vector3d operator - (const Vector3d &v1, const Vector3d &v2);
+    friend Vector3d operator * (const Vector3d &u, const Vector3d &v);
+    friend Vector3d operator * (double t, const Vector3d &v);
+    friend Vector3d operator * (const Vector3d &v, double t);
+    friend Vector3d operator / (Vector3d v, double t);
 
-    inline friend Vector3d operator +
-        (const Vector3d &v1, const Vector3d &v2);
-
-    inline friend Vector3d operator - (const Vector3d &u, const Vector3d &v);
-
-    inline friend Vector3d operator * (const Vector3d &u, const Vector3d &v);
-
-    inline friend Vector3d operator * (double t, const Vector3d &v);
-
-    inline friend Vector3d operator * (const Vector3d &v, double t);
-
-    inline friend Vector3d operator / (Vector3d v, double t);
-
-    inline friend double dot(const Vector3d &u, const Vector3d &v);
-
-    inline friend Vector3d cross(const Vector3d &u, const Vector3d &v);
-
-    inline friend Vector3d unit_vector(Vector3d v);
-
+    friend double dot(const Vector3d &v1, const Vector3d &v2);
+    friend Vector3d cross(const Vector3d &v1, const Vector3d &v2);
+    friend Vector3d unitVector(Vector3d v);
 };
+
 
 using Point3d = Vector3d;
 using Color = Vector3d;

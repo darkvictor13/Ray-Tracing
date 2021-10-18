@@ -76,20 +76,20 @@ std::ostream& operator << (std::ostream &out, const Vector3d &v) {
 
 Vector3d operator + (const Vector3d &v1, const Vector3d &v2) {
     return Vector3d(v1.array[0] + v2.array[0],
-            v1.array[1] + v2.array[1],
-            v1.array[2] + v2.array[2]);
+                    v1.array[1] + v2.array[1],
+                    v1.array[2] + v2.array[2]);
 }
 
-Vector3d operator - (const Vector3d &u, const Vector3d &v) {
-    return Vector3d(u.array[0] - v.array[0],
-            u.array[1] - v.array[1],
-            u.array[2] - v.array[2]);
+Vector3d operator - (const Vector3d &v1, const Vector3d &v2) {
+    return Vector3d(v1.array[0] - v2.array[0],
+                    v1.array[1] - v2.array[1],
+                    v1.array[2] - v2.array[2]);
 }
 
-Vector3d operator * (const Vector3d &u, const Vector3d &v) {
-    return Vector3d(u.array[0] * v.array[0],
-            u.array[1] * v.array[1],
-            u.array[2] * v.array[2]);
+Vector3d operator * (const Vector3d &v1, const Vector3d &v2) {
+    return Vector3d(v1.array[0] * v2.array[0],
+                    v1.array[1] * v2.array[1],
+                    v1.array[2] * v2.array[2]);
 }
 
 Vector3d operator * (double t, const Vector3d &v) {
@@ -104,18 +104,18 @@ Vector3d operator / (Vector3d v, double t) {
     return (1/t) * v;
 }
 
-double dot(const Vector3d &u, const Vector3d &v) {
-    return u.array[0] * v.array[0]
-        + u.array[1] * v.array[1]
-        + u.array[2] * v.array[2];
+double dot(const Vector3d &v1, const Vector3d &v2) {
+    return (v1.array[0] * v2.array[0] +
+            v1.array[1] * v2.array[1] +
+            v1.array[2] * v2.array[2]);
 }
 
-Vector3d cross(const Vector3d &u, const Vector3d &v) {
-    return Vector3d(u.array[1] * v.array[2] - u.array[2] * v.array[1],
-            u.array[2] * v.array[0] - u.array[0] * v.array[2],
-            u.array[0] * v.array[1] - u.array[1] * v.array[0]);
+Vector3d cross(const Vector3d &v1, const Vector3d &v2) {
+    return Vector3d(v1.array[1] * v2.array[2] - v1.array[2] * v2.array[1],
+                    v1.array[2] * v2.array[0] - v1.array[0] * v2.array[2],
+                    v1.array[0] * v2.array[1] - v1.array[1] * v2.array[0]);
 }
 
-Vector3d unit_vector(Vector3d v) {
+Vector3d unitVector(Vector3d v) {
     return v / v.lenght();
 }
