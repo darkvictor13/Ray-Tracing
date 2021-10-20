@@ -4,7 +4,7 @@ FLAGS=-std=c++17 -O2 -c
 
 CAMINHO=../src
 
-SRC=$(CAMINHO)/*.cpp 
+SRC=$(CAMINHO)/*/*.cpp $(CAMINHO)/main.cpp
 OBJS=./*.o
 OUT=main.out
 
