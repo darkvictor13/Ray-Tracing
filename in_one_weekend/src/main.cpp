@@ -21,7 +21,7 @@
 #define FOCAL_LENGTH    1.0
 
 Color rayColor (const Ray& r);
-inline bool hitSphere(const Point3d& center, double radius, const Ray& r);
+inline double hitSphere(const Point3d& center, double radius, const Ray& r);
 
 int main (int argc, char *argv[]) {
 
@@ -67,20 +67,22 @@ int main (int argc, char *argv[]) {
 
 Color rayColor(const Ray& r) {
     // mudando a posição da bola
-    if (hitSphere(Point3d(-0.5, 0, -1), 0.2, r)) {
-        return Color(1, 0, 0);
+    double t = hitSphere(Point3d(-0.5, 0.5, -1), 0.5, r);
+    if (t > 0.0) {
+        Vector3d normal = unitVector(r.at(t) - Vector3d(-0.5, 0.5, -1));
+        return 0.5*Color(normal.x()+1, normal.y()+1, normal.z()+1);
     }
-
     auto unit_direction = unitVector(r.direction);
-    auto t = 0.5*(unit_direction.green() + 1.0);
+    t = 0.5*(unit_direction.green() + 1.0);
     return (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0);
 }
 
-bool hitSphere(const Point3d& center, double radius, const Ray& r) {
+double hitSphere(const Point3d& center, double radius, const Ray& r) {
     Vector3d oc = r.origin - center;
-    auto a = dot(r.direction, r.direction);
-    auto b = 2.0 * dot(oc, r.direction);
-    auto c = dot(oc, oc) - radius*radius;
-    auto discriminant = b*b - 4*a*c;
-    return (discriminant > 0);
+    auto a = r.direction.lenghtSquared();
+    auto half_b = dot(oc, r.direction);
+    auto c = oc.lenghtSquared() - radius*radius;
+    auto discriminant = half_b*half_b - a*c;
+
+    return (discriminant < 0? -1.0 : (-half_b - sqrt(discriminant) ) / a);
 }
