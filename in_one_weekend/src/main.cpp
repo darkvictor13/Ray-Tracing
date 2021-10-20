@@ -2,10 +2,14 @@
 #include <iostream>
 #include <cctype>
 #include <fstream>
+#include <limits>
 
-#include "vector.hpp"
-#include "color.hpp"
-#include "ray.hpp"
+#include "vector/vector.hpp"
+#include "ray/color.hpp"
+#include "ray/ray.hpp"
+#include "objects/hittable.hpp"
+#include "objects/sphere.hpp"
+#include "objects/hittable_list.hpp"
 
 #define IMAGE_PATH        "../images/"
 #define DEFAULT_FILE_NAME "bola.ppm"
@@ -20,7 +24,7 @@
 #define VIEWPORT_WIDTH  (ASPECT_RATIO * VIEWPORT_HEIGHT)
 #define FOCAL_LENGTH    1.0
 
-Color rayColor (const Ray& r);
+Color rayColor (const Ray& r, const Hittable& world);
 inline double hitSphere(const Point3d& center, double radius, const Ray& r);
 
 int main (int argc, char *argv[]) {
@@ -45,6 +49,10 @@ int main (int argc, char *argv[]) {
     Vector3d vertical(0, VIEWPORT_HEIGHT, 0);
     Vector3d lower_left_corner = origin - horizontal/2 - vertical/2 - Vector3d(0, 0, FOCAL_LENGTH);
 
+	HittableList world;
+    world.insert(std::make_shared<Sphere>(Point3d(0,0,-1), 0.5));
+    world.insert(std::make_shared<Sphere>(Point3d(0,-100.5,-1), 100));
+
     std::ofstream file;
     file.open(IMAGE_PATH + file_name);
     file << "P3\n" << IMAGE_WIDTH << ' ' << IMAGE_HEIGHT << "\n255\n";
@@ -57,7 +65,7 @@ int main (int argc, char *argv[]) {
             auto u = double(i) / (IMAGE_WIDTH-1);
             auto v = double(j) / (IMAGE_HEIGHT-1);
             Ray r(origin, lower_left_corner + u*horizontal + v*vertical - origin);
-            writeColor(file, rayColor(r));
+            writeColor(file, rayColor(r, world));
         }
     }
 
@@ -65,15 +73,12 @@ int main (int argc, char *argv[]) {
     return 0;
 }
 
-Color rayColor(const Ray& r) {
-    // mudando a posição da bola
-    double t = hitSphere(Point3d(-0.5, 0.5, -1), 0.5, r);
-    if (t > 0.0) {
-        Vector3d normal = unitVector(r.at(t) - Vector3d(-0.5, 0.5, -1));
-        return 0.5*Color(normal.x()+1, normal.y()+1, normal.z()+1);
-    }
-    auto unit_direction = unitVector(r.direction);
-    t = 0.5*(unit_direction.green() + 1.0);
+Color rayColor(const Ray& r, const Hittable& world) {
+    HitRecord rec;
+    if (world.hit(r, 0, std::numeric_limits<double>::infinity(), rec)) {
+        return 0.5 * (rec.normal + Color(1,1,1));
+    }auto unit_direction = unitVector(r.direction);
+    double t = 0.5*(unit_direction.green() + 1.0);
     return (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0);
 }
 

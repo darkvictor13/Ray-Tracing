@@ -1,7 +1,7 @@
 #ifndef RAY
 #define RAY
 
-#include "vector.hpp"
+#include "../vector/vector.hpp"
 
 struct Ray {
 	Point3d origin;
