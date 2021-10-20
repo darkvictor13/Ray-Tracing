@@ -1,6 +1,4 @@
-# O Compilador usado
 CC=g++
-# flags das libs utilizadas
 LIBS=-lm
 FLAGS=-std=c++17 -O2 -c
 
@@ -19,5 +17,5 @@ $(OBJS): $(SRC)
 clean:
 	rm -f $(OBJS) $(OUT)
 
-run: release
-	./main.out
+run: all
+	./$(OUT)
