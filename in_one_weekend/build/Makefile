@@ -1,15 +1,23 @@
 # O Compilador usado
 CC=g++
 # flags das libs utilizadas
-LIBS=-std=c++17 -O2 -lm
+LIBS=-lm
+FLAGS=-std=c++17 -O2 -c
 
 CAMINHO=../src
 
 SRC=$(CAMINHO)/*.cpp 
+OBJS=./*.o
+OUT=main.out
 
-# como compila o programa
-release:
-	$(CC) $(SRC) $(LIBS) -o main.out
+all: $(OBJS)
+	$(CC) $(OBJS) -o $(OUT)
+
+$(OBJS): $(SRC)
+	$(CC) $(SRC) $(FLAGS) $(LIBS)
+
+clean:
+	rm -f $(OBJS) $(OUT)
 
 run: release
 	./main.out
