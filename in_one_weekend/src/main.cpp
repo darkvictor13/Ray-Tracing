@@ -1,4 +1,6 @@
 #include <iomanip>
+#include <cmath>
+#include <math.h>
 #include <iostream>
 #include <cctype>
 #include <fstream>
@@ -18,7 +20,9 @@
 #include "camera/camera.hpp"
 #include "camera/ppm_writer.hpp"
 
-Color rayColor (const Ray& r, const Hittable& world);
+#define MAX_DEPTH 50
+
+Color rayColor (const Ray& r, const Hittable& world, int8_t depht);
 
 inline double hitSphere(const Point3d& center, double radius, const Ray& r);
 
@@ -48,7 +52,7 @@ int main (int argc, char *argv[]) {
                 auto u = (i + utils::randomDouble()) / (IMAGE_WIDTH-1);
                 auto v = (j + utils::randomDouble()) / (IMAGE_HEIGHT-1);
                 Ray r = cam.getRay(u, v);
-                pixel_color += rayColor(r, world);
+                pixel_color += rayColor(r, world, MAX_DEPTH);
             }
             writer.writeColor(pixel_color);
         }
@@ -57,10 +61,14 @@ int main (int argc, char *argv[]) {
     return 0;
 }
 
-Color rayColor(const Ray& r, const Hittable& world) {
+Color rayColor(const Ray& r, const Hittable& world, int8_t depht) {
     HitRecord rec;
+    if (depht < 1) {
+        return Color(0, 0, 0);
+    }
     if (world.hit(r, 0, utils::INF, rec)) {
-        return 0.5 * (rec.normal + Color(1,1,1));
+        Point3d target = rec.point + rec.normal + randomInUnitSphere();
+        return 0.5 * rayColor(Ray(rec.point, target - rec.point), world, depht-1);
     }
     auto unit_direction = unitVector(r.direction);
     double t = 0.5*(unit_direction.green() + 1.0);
@@ -74,7 +82,7 @@ double hitSphere(const Point3d& center, double radius, const Ray& r) {
     auto c = oc.lenghtSquared() - radius*radius;
     auto discriminant = half_b*half_b - a*c;
 
-    return (discriminant < 0? -1.0 : (-half_b - sqrt(discriminant) ) / a);
+    return (discriminant < 0? -1.0 : (-half_b - std::sqrt(discriminant)) / a);
 }
 
 std::string getFileName() {

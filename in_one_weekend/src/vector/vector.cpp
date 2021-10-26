@@ -1,5 +1,7 @@
 #include "vector.hpp"
 
+using utils::randomDouble;
+
 Vector3d::Vector3d() 
     : array{0, 0, 0} {}
 
@@ -116,6 +118,23 @@ Vector3d cross(const Vector3d &v1, const Vector3d &v2) {
                     v1.array[0] * v2.array[1] - v1.array[1] * v2.array[0]);
 }
 
+Vector3d Vector3d::random() {
+    return Vector3d(randomDouble(), randomDouble(), randomDouble());
+}
+
+Vector3d Vector3d::random(double min, double max) {
+    return Vector3d(randomDouble(min, max),
+            randomDouble(min, max), randomDouble(min, max));
+}
+
 Vector3d unitVector(Vector3d v) {
     return v / v.lenght();
+}
+
+Vector3d randomInUnitSphere() {
+    Vector3d p = Vector3d::random(-1,1);
+    while (p.lenghtSquared() >= 1) {
+        p = Vector3d::random(-1,1);
+    }
+    return p;
 }

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "../utils/numbers.hpp"
 
 struct Vector3d {
     double array[3];
@@ -27,9 +28,11 @@ struct Vector3d {
     Vector3d& operator *= (const double t);
     Vector3d& operator /= (const double t);
 
-    double lenghtSquared() const;
+    static Vector3d random();
+    static Vector3d random(double min, double max);
 
     double lenght() const;
+    double lenghtSquared() const;
 
     // funções auxiliares que recebem a classe como parâmetro
     friend std::ostream& operator << (std::ostream &out, const Vector3d &v);
@@ -45,6 +48,7 @@ struct Vector3d {
     friend Vector3d unitVector(Vector3d v);
 };
 
+Vector3d randomInUnitSphere();
 
 using Point3d = Vector3d;
 using Color = Vector3d;
