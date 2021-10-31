@@ -8,7 +8,7 @@
 #include <iomanip>
 
 #include "setup.hpp"
-#include "../vector/vector.hpp"
+#include "../vector_3d/vector_3d.hpp"
 #include "../utils/numbers.hpp"
 #include "../ray/ray.hpp"
 

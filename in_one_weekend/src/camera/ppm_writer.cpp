@@ -10,9 +10,9 @@ void PpmWriter::writeHeader() {
 }
 
 void PpmWriter::writeColor(Color color) {
-	double red = color.red();
-	double green = color.green();
-	double blue = color.blue();
+	double red = color.red;
+	double green = color.green;
+	double blue = color.blue;
 
 	double scale = 1.0 / _samples_per_pixel;
     red = std::sqrt(scale * red);

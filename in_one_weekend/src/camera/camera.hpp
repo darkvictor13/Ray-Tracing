@@ -2,7 +2,7 @@
 #define CAMERA
 
 #include "setup.hpp"
-#include "../vector/vector.hpp"
+#include "../vector_3d/vector_3d.hpp"
 #include "../ray/ray.hpp"
 
 class Camera {

@@ -6,9 +6,7 @@
 #include <fstream>
 #include <thread>
 
-#include "vector/vector.hpp"
-
-#include "ray/color.hpp"
+#include "vector_3d/vector_3d.hpp"
 #include "ray/ray.hpp"
 
 #include "objects/hittable.hpp"
@@ -62,7 +60,6 @@ int main (int argc, char *argv[]) {
                 Ray r = cam.getRay(u, v);
                 pixel_color += rayColor(r, world, MAX_DEPTH);
             }
-            //writer.writeColor(pixel_color);
             image[i][j] = pixel_color;
         }
     }
@@ -83,7 +80,7 @@ Color rayColor(const Ray& r, const Hittable& world, int8_t depht) {
         return 0.5 * rayColor(Ray(rec.point, target - rec.point), world, depht-1);
     }
     auto unit_direction = unitVector(r.direction);
-    double t = 0.5*(unit_direction.green() + 1.0);
+    double t = 0.5*(unit_direction.green + 1.0);
     return (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0);
 }
 

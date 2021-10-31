@@ -6,18 +6,18 @@
 #include "../utils/numbers.hpp"
 
 struct Vector3d {
-    double array[3];
+    union {
+        double array[3];
+        struct {
+            double x, y, z;
+        };
+        struct {
+            double red, green, blue;
+        };
+    };
 
     Vector3d();
     Vector3d(double d1, double d2, double d3);
-
-    double x() const;
-    double y() const;
-    double z() const;
-
-    double red() const;
-    double green() const;
-    double blue() const;
 
     // operações com o vetor matemático
     Vector3d operator - () const;

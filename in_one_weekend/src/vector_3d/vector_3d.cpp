@@ -1,4 +1,4 @@
-#include "vector.hpp"
+#include "vector_3d.hpp"
 
 using utils::randomDouble;
 
@@ -7,30 +7,6 @@ Vector3d::Vector3d()
 
 Vector3d::Vector3d(double d1, double d2, double d3)
     : array{d1, d2, d3} {}
-
-double Vector3d::x() const {
-    return array[0];
-}
-
-double Vector3d::y() const {
-    return array[1];
-}
-
-double Vector3d::z() const {
-    return array[2];
-}
-
-double Vector3d::red() const {
-    return array[0];
-}
-
-double Vector3d::green() const {
-    return array[1];
-}
-
-double Vector3d::blue() const {
-    return array[2];
-}
 
 Vector3d Vector3d::operator - () const {
     return Vector3d(-array[0], -array[1], -array[2]);
