@@ -1,6 +1,13 @@
 CC=g++
+
 LIBS=-lm
-FLAGS=-std=c++17 -O2 -c
+
+CXXFLAGS=-std=c++17 -c
+# para executar mais rápido
+CXXFLAGS += -O3
+# para degugar com gdb
+# CXXFLAGS += -g
+
 
 CAMINHO=../src
 
@@ -12,7 +19,7 @@ all: $(OBJS)
 	$(CC) $(OBJS) -o $(OUT)
 
 $(OBJS): $(SRC)
-	$(CC) $(SRC) $(FLAGS) $(LIBS)
+	$(CC) $(SRC) $(CXXFLAGS) $(LIBS)
 
 clean:
 	rm -f $(OBJS) $(OUT)

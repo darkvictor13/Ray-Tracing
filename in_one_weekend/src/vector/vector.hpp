@@ -46,6 +46,7 @@ struct Vector3d {
     friend double dot(const Vector3d &v1, const Vector3d &v2);
     friend Vector3d cross(const Vector3d &v1, const Vector3d &v2);
     friend Vector3d unitVector(Vector3d v);
+    friend Vector3d randomInHemisphere(const Vector3d &normal);
 };
 
 Vector3d randomInUnitSphere();

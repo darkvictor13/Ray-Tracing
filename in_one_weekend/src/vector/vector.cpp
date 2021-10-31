@@ -131,6 +131,14 @@ Vector3d unitVector(Vector3d v) {
     return v / v.lenght();
 }
 
+Vector3d randomInHemisphere(const Vector3d &normal) {
+    Vector3d in_unit_sphere = randomInUnitSphere();
+
+    // In the same hemisphere as the normal
+    return (dot(in_unit_sphere, normal) > 0.0)? in_unit_sphere : -in_unit_sphere;
+}
+
+
 Vector3d randomInUnitSphere() {
     Vector3d p = Vector3d::random(-1,1);
     while (p.lenghtSquared() >= 1) {

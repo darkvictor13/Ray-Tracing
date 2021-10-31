@@ -40,7 +40,7 @@ int main (int argc, char *argv[]) {
     std::string file_name = (argc == 2? argv[1] : getFileName());
     file_name.insert(0, IMAGE_PATH);
 
-    Color image[IMAGE_WIDTH][IMAGE_HEIGHT];
+    Color image[IMAGE_HEIGHT][IMAGE_WIDTH];
     Camera cam;
     HittableList world(3);
     world.insert(std::make_shared<Sphere>(Point3d(0,0,-1), 0.5));
@@ -52,16 +52,17 @@ int main (int argc, char *argv[]) {
     writer.writeHeader();
 
     int i, j, s;
-    for (j = IMAGE_HEIGHT - 1; j >= 0; j--) {
-        std::cout << "Faltam " << std::setfill('0') << std::setw(3) << j << " linhas para gerar\n";
-        for (i = 0; i < IMAGE_WIDTH; i++) {
+    for (i = 0; i < IMAGE_HEIGHT; i++) {
+        std::cout << "Gerando a linha " << std::setfill('0') << std::setw(3) << i << '\n';
+        for (j = 0; j < IMAGE_WIDTH; j++) {
             Color pixel_color(0, 0, 0);
             for (s = 0; s < SAMPLES_PER_PIXEL; s++) {
-                auto u = (i + utils::randomDouble()) / (IMAGE_WIDTH-1);
-                auto v = (j + utils::randomDouble()) / (IMAGE_HEIGHT-1);
+                auto u = (j + utils::randomDouble()) / (IMAGE_WIDTH-1);
+                auto v = ((IMAGE_HEIGHT - (i + 1)) + utils::randomDouble()) / (IMAGE_HEIGHT-1);
                 Ray r = cam.getRay(u, v);
                 pixel_color += rayColor(r, world, MAX_DEPTH);
             }
+            //writer.writeColor(pixel_color);
             image[i][j] = pixel_color;
         }
     }
@@ -77,8 +78,8 @@ Color rayColor(const Ray& r, const Hittable& world, int8_t depht) {
     if (depht < 1) {
         return Color(0, 0, 0);
     }
-    if (world.hit(r, 0, utils::INF, rec)) {
-        Point3d target = rec.point + rec.normal + randomInUnitSphere();
+    if (world.hit(r, 0.001, utils::INF, rec)) {
+        Point3d target = rec.point + rec.normal + randomInHemisphere(rec.normal);
         return 0.5 * rayColor(Ray(rec.point, target - rec.point), world, depht-1);
     }
     auto unit_direction = unitVector(r.direction);

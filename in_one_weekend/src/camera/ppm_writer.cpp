@@ -1,13 +1,12 @@
 #include "ppm_writer.hpp"
+#include <cmath>
 
 PpmWriter::PpmWriter(const std::string &temp, int height, int width,
-        int samples_per_pixel) :
-        file_buffer(temp), height(height), width(width),
-        samples_per_pixel(samples_per_pixel) {}
+        int samples_per_pixel) : file_buffer(temp),
+        _height(height), _width(width), _samples_per_pixel(samples_per_pixel) {}
 
 void PpmWriter::writeHeader() {
-    file_buffer << "P3\n" << this->width << ' '
-                << this->height << "\n255\n";
+    file_buffer << "P3\n" << _width << ' ' << _height << "\n255\n";
 }
 
 void PpmWriter::writeColor(Color color) {
@@ -15,21 +14,20 @@ void PpmWriter::writeColor(Color color) {
 	double green = color.green();
 	double blue = color.blue();
 
-	double scale = 1.0 / samples_per_pixel;
-    red *= scale;
-    green *= scale;
-    blue *= scale;
+	double scale = 1.0 / _samples_per_pixel;
+    red = std::sqrt(scale * red);
+    green = std::sqrt(scale * green);
+    blue = std::sqrt(scale * blue);
 
     file_buffer << static_cast<int>(256 * std::clamp(red, 0.0, 0.999))   << ' '
         		<< static_cast<int>(256 * std::clamp(green, 0.0, 0.999)) << ' '
         		<< static_cast<int>(256 * std::clamp(blue, 0.0, 0.999))  << '\n';
 }
 
-void PpmWriter::writeImage(const Color image[IMAGE_WIDTH][IMAGE_HEIGHT] ) {
+void PpmWriter::writeImage(const Color image[][IMAGE_WIDTH]) {
     int i, j;
-    for (j = height - 1; j >= 0; j--) {
-        std::cout << "Faltam " << std::setfill('0') << std::setw(3) << j << " linhas para gerar\n";
-        for (i = 0; i < width; i++) {
+    for (i = 0; i < _height; i++) {
+        for (j = 0; j < _width; j++) {
             writeColor(image[i][j]);
         }
     }

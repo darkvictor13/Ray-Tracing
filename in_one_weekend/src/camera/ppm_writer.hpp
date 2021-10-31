@@ -15,16 +15,16 @@
 class PpmWriter {
 private:
 	std::ofstream file_buffer;
-	int height, width, samples_per_pixel;
+	int _height, _width, _samples_per_pixel;
 public:
 	PpmWriter(const std::string &temp = (std::string(IMAGE_PATH) + DEFAULT_FILE_NAME),
-				int height = IMAGE_HEIGHT,
-				int width  = IMAGE_WIDTH,
-				int samples_per_pixel = SAMPLES_PER_PIXEL);
+				int _height = IMAGE_HEIGHT,
+				int _width  = IMAGE_WIDTH,
+				int _samples_per_pixel = SAMPLES_PER_PIXEL);
 
 	void writeColor(Color color);
 	void writeHeader();
-	void writeImage(const Color image[IMAGE_WIDTH][IMAGE_HEIGHT]);
+	void writeImage(const Color image[][IMAGE_WIDTH]);
 	~PpmWriter();
 };
 
