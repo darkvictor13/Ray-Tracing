@@ -24,7 +24,7 @@ public:
 
 	void writeColor(Color color);
 	void writeHeader();
-	void writeImage();
+	void writeImage(const Color image[IMAGE_WIDTH][IMAGE_HEIGHT]);
 	~PpmWriter();
 };
 

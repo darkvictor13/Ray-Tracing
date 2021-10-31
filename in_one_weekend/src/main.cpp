@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cctype>
 #include <fstream>
+#include <thread>
 
 #include "vector/vector.hpp"
 
@@ -21,6 +22,7 @@
 #include "camera/ppm_writer.hpp"
 
 #define MAX_DEPTH 50
+#define CPU_CORES 4
 
 Color rayColor (const Ray& r, const Hittable& world, int8_t depht);
 
@@ -28,11 +30,17 @@ inline double hitSphere(const Point3d& center, double radius, const Ray& r);
 
 std::string getFileName();
 
+void generateThreads(std::vector<std::thread> t) {
+    auto sep = IMAGE_WIDTH / CPU_CORES;
+
+}
+
 int main (int argc, char *argv[]) {
 
     std::string file_name = (argc == 2? argv[1] : getFileName());
     file_name.insert(0, IMAGE_PATH);
 
+    Color image[IMAGE_WIDTH][IMAGE_HEIGHT];
     Camera cam;
     HittableList world(3);
     world.insert(std::make_shared<Sphere>(Point3d(0,0,-1), 0.5));
@@ -54,9 +62,12 @@ int main (int argc, char *argv[]) {
                 Ray r = cam.getRay(u, v);
                 pixel_color += rayColor(r, world, MAX_DEPTH);
             }
-            writer.writeColor(pixel_color);
+            image[i][j] = pixel_color;
         }
     }
+
+    std::cout << "Escrevendo a imagem em " << file_name << '\n';
+    writer.writeImage(image);
 
     return 0;
 }

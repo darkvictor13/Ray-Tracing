@@ -25,16 +25,12 @@ void PpmWriter::writeColor(Color color) {
         		<< static_cast<int>(256 * std::clamp(blue, 0.0, 0.999))  << '\n';
 }
 
-// TODO
-void PpmWriter::writeImage() {
+void PpmWriter::writeImage(const Color image[IMAGE_WIDTH][IMAGE_HEIGHT] ) {
     int i, j;
     for (j = height - 1; j >= 0; j--) {
         std::cout << "Faltam " << std::setfill('0') << std::setw(3) << j << " linhas para gerar\n";
         for (i = 0; i < width; i++) {
-            Color pixel_color(0, 0, 0);
-			for (int s = 0; s < samples_per_pixel; s++) {
-            }
-			writeColor(pixel_color);
+            writeColor(image[i][j]);
         }
     }
 }
