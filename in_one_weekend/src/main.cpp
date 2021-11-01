@@ -28,9 +28,25 @@ inline double hitSphere(const Point3d& center, double radius, const Ray& r);
 
 std::string getFileName();
 
-void generateThreads(std::vector<std::thread> t) {
-    auto sep = IMAGE_WIDTH / CPU_CORES;
+void generateImagePart(const uint16_t id, const int height_initial, const int height_final,
+        const HittableList &world, Color m[][IMAGE_WIDTH], const Camera &cam) {
 
+    std::cout << "Thread " << id << " Iniciou\n";
+
+    int i, j, s;
+    for (i = height_initial; i < height_final; i++) {
+        for (j = 0; j < IMAGE_WIDTH; j++) {
+            Color pixel_color(0, 0, 0);
+            for (s = 0; s < SAMPLES_PER_PIXEL; s++) {
+                auto u = (j + utils::randomDouble()) / (IMAGE_WIDTH-1);
+                auto v = ((IMAGE_HEIGHT - (i + 1)) + utils::randomDouble()) / (IMAGE_HEIGHT-1);
+                Ray r = cam.getRay(u, v);
+                pixel_color += rayColor(r, world, MAX_DEPTH);
+            }
+            m[i][j] = pixel_color;
+        }
+    }
+    std::cout << "Thread " << id << " Finalizou\n";
 }
 
 int main (int argc, char *argv[]) {
@@ -49,19 +65,32 @@ int main (int argc, char *argv[]) {
     PpmWriter writer(file_name);
     writer.writeHeader();
 
-    int i, j, s;
-    for (i = 0; i < IMAGE_HEIGHT; i++) {
-        std::cout << "Gerando a linha " << std::setfill('0') << std::setw(3) << i << '\n';
-        for (j = 0; j < IMAGE_WIDTH; j++) {
-            Color pixel_color(0, 0, 0);
-            for (s = 0; s < SAMPLES_PER_PIXEL; s++) {
-                auto u = (j + utils::randomDouble()) / (IMAGE_WIDTH-1);
-                auto v = ((IMAGE_HEIGHT - (i + 1)) + utils::randomDouble()) / (IMAGE_HEIGHT-1);
-                Ray r = cam.getRay(u, v);
-                pixel_color += rayColor(r, world, MAX_DEPTH);
-            }
-            image[i][j] = pixel_color;
+    std::cout << "Construindo as Threads\n";
+    std::vector<std::thread> t;
+    {
+        const int height_sep = IMAGE_HEIGHT / CPU_CORES;
+        const int lim = CPU_CORES-1;
+        int height_sum = 0;
+        for (uint16_t i = 0; i < lim; i++) {
+            t.push_back(std::thread(
+                generateImagePart, i,
+                height_sum, height_sum + height_sep,
+                world, image, cam
+            ));
+
+            height_sum += height_sep;
         }
+        t.push_back(std::thread(
+                    generateImagePart,
+                    static_cast<uint16_t>(CPU_CORES-1),
+                    height_sum, IMAGE_HEIGHT,
+                    world, image, cam)
+                );
+    }
+
+    std::cout << "Aguardando as threads finalizarem\n";
+    for (auto &it : t) {
+        it.join();
     }
 
     std::cout << "Escrevendo a imagem em " << file_name << '\n';
