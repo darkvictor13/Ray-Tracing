@@ -17,6 +17,7 @@
 #include "materials/material.hpp"
 #include "materials/lambertian.hpp"
 #include "materials/metal.hpp"
+#include "materials/dieletric.hpp"
 
 #include "utils/numbers.hpp"
 
@@ -44,7 +45,7 @@ int main (int argc, char *argv[]) {
     HittableList world(4);
     auto material_ground = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
     auto material_center = std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-    auto material_left   = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.3);
+    auto material_left   = std::make_shared<Dieletric>(1.5);
     auto material_right  = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
 
     std::string file_name = (argc == 2? argv[1] : getFileName());
@@ -59,6 +60,7 @@ int main (int argc, char *argv[]) {
     world.insert(std::make_shared<Sphere>(Point3d( 0.0, -100.5, -1.0), 100.0, material_ground));
     world.insert(std::make_shared<Sphere>(Point3d( 0.0,    0.0, -1.0),   0.5, material_center));
     world.insert(std::make_shared<Sphere>(Point3d(-1.0,    0.0, -1.0),   0.5, material_left));
+    world.insert(std::make_shared<Sphere>(Point3d(-1.0,    0.0, -1.0),  -0.4, material_left));
     world.insert(std::make_shared<Sphere>(Point3d( 1.0,    0.0, -1.0),   0.5, material_right));
 
     debug("Nome do arquivo " << file_name << '\n');

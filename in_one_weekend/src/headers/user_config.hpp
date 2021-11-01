@@ -17,7 +17,7 @@
 #define IMAGE_PATH        "../images/"
 #define DEFAULT_FILE_NAME "bola.ppm"
 
-#define IMAGE_WIDTH  200
+#define IMAGE_WIDTH  400
 #define ASPECT_RATIO (16.0 / 9.0)
 
 #define MAX_DEPTH 50

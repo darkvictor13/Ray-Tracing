@@ -126,6 +126,13 @@ Vector3d reflect(const Vector3d &v1, const Vector3d &v2) {
     return v1 - 2 * dot(v1, v2) * v2;
 }
 
+Vector3d refract(const Vector3d &uv, const Vector3d &n, double etai_over_etat) {
+    double cos_theta = fmin(dot(-uv, n), 1.0);
+    Vector3d r_out_perp =  etai_over_etat * (uv + cos_theta*n);
+    Vector3d r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.lenghtSquared())) * n;
+    return r_out_perp + r_out_parallel;
+}
+
 Vector3d randomInUnitSphere() {
     Vector3d p = Vector3d::random(-1,1);
     while (p.lenghtSquared() >= 1) {

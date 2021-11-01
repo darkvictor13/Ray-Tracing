@@ -50,6 +50,7 @@ struct Vector3d {
     friend Vector3d unitVector(Vector3d v);
     friend Vector3d randomInHemisphere(const Vector3d &normal);
     friend Vector3d reflect(const Vector3d &v1, const Vector3d &v2);
+    friend Vector3d refract(const Vector3d &uv, const Vector3d &n, double etai_over_etat);
 };
 
 Vector3d randomInUnitSphere();
