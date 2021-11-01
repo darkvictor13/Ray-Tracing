@@ -2,8 +2,8 @@
 
 Sphere::Sphere() : center(), radius() {}
 
-Sphere::Sphere(Point3d center, double radius) :
-	center(center), radius(radius) {}
+Sphere::Sphere(Point3d center, double radius, std::shared_ptr<Material> m) :
+	center(center), radius(radius), material(m) {}
 
 bool Sphere::hit(const Ray& r, double t_min, double t_max,
 				HitRecord& rec) const {
@@ -29,6 +29,7 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max,
     rec.t = root;
     rec.point = r.at(rec.t);
     rec.setFaceNormal(r, (rec.point - center) / radius);
+    rec.material = material;
 
     return true;
 }

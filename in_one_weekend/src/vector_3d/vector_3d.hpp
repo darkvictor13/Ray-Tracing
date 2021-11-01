@@ -34,19 +34,22 @@ struct Vector3d {
     double lenght() const;
     double lenghtSquared() const;
 
+    bool aproximalyZero() const;
+
     // funções auxiliares que recebem a classe como parâmetro
     friend std::ostream& operator << (std::ostream &out, const Vector3d &v);
     friend Vector3d operator + (const Vector3d &v1, const Vector3d &v2);
     friend Vector3d operator - (const Vector3d &v1, const Vector3d &v2);
     friend Vector3d operator * (const Vector3d &u, const Vector3d &v);
-    friend Vector3d operator * (double t, const Vector3d &v);
-    friend Vector3d operator * (const Vector3d &v, double t);
-    friend Vector3d operator / (Vector3d v, double t);
+    friend Vector3d operator * (const double t, const Vector3d &v);
+    friend Vector3d operator * (const Vector3d &v, const double t);
+    friend Vector3d operator / (Vector3d v, const double t);
 
     friend double dot(const Vector3d &v1, const Vector3d &v2);
     friend Vector3d cross(const Vector3d &v1, const Vector3d &v2);
     friend Vector3d unitVector(Vector3d v);
     friend Vector3d randomInHemisphere(const Vector3d &normal);
+    friend Vector3d reflect(const Vector3d &v1, const Vector3d &v2);
 };
 
 Vector3d randomInUnitSphere();

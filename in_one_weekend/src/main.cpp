@@ -13,6 +13,10 @@
 #include "objects/sphere.hpp"
 #include "objects/hittable_list.hpp"
 
+#include "materials/material.hpp"
+#include "materials/lambertian.hpp"
+#include "materials/metal.hpp"
+
 #include "utils/numbers.hpp"
 
 #include "camera/setup.hpp"
@@ -50,16 +54,27 @@ void generateImagePart(const uint16_t id, const int height_initial, const int he
 }
 
 int main (int argc, char *argv[]) {
-
-    std::string file_name = (argc == 2? argv[1] : getFileName());
-    file_name.insert(0, IMAGE_PATH);
-
     Color image[IMAGE_HEIGHT][IMAGE_WIDTH];
     Camera cam;
-    HittableList world(3);
-    world.insert(std::make_shared<Sphere>(Point3d(0,0,-1), 0.5));
-    world.insert(std::make_shared<Sphere>(Point3d(0,-100.5,-1), 100));
-    world.insert(std::make_shared<Sphere>(Point3d(-50,20,-50), 10));
+    HittableList world(4);
+    auto material_ground = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+    auto material_center = std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
+    auto material_left   = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.3);
+    auto material_right  = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
+
+    std::string file_name = (argc == 2? argv[1] : getFileName());
+    {
+        const auto it = file_name.find_last_of('.');
+        if (it == file_name.npos) {
+            file_name += ".ppm";
+        }
+        file_name.insert(0, IMAGE_PATH);
+    }
+
+    world.insert(std::make_shared<Sphere>(Point3d( 0.0, -100.5, -1.0), 100.0, material_ground));
+    world.insert(std::make_shared<Sphere>(Point3d( 0.0,    0.0, -1.0),   0.5, material_center));
+    world.insert(std::make_shared<Sphere>(Point3d(-1.0,    0.0, -1.0),   0.5, material_left));
+    world.insert(std::make_shared<Sphere>(Point3d( 1.0,    0.0, -1.0),   0.5, material_right));
 
     std::cout << "Nome do arquivo " << file_name << '\n';
     PpmWriter writer(file_name);
@@ -105,8 +120,12 @@ Color rayColor(const Ray& r, const Hittable& world, int8_t depht) {
         return Color(0, 0, 0);
     }
     if (world.hit(r, 0.001, utils::INF, rec)) {
-        Point3d target = rec.point + rec.normal + randomInHemisphere(rec.normal);
-        return 0.5 * rayColor(Ray(rec.point, target - rec.point), world, depht-1);
+        Ray scattered;
+        Color attenuation;
+        if (rec.material->scatter(r, rec, attenuation, scattered)) {
+            return attenuation * rayColor(scattered, world, depht-1);
+        }
+        return Color(0,0,0);
     }
     auto unit_direction = unitVector(r.direction);
     double t = 0.5*(unit_direction.green + 1.0);
@@ -132,10 +151,6 @@ std::string getFileName() {
     if (tolower(input) == 's') {
         cout << "Entre com o nome do arquivo: ";
         cin >> file_name;
-        auto it = file_name.find_last_of('.');
-        if (it == file_name.npos) {
-            file_name += ".ppm";
-        }
     }else{
         file_name = DEFAULT_FILE_NAME;
     }

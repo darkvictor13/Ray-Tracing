@@ -48,6 +48,14 @@ double Vector3d::lenght() const {
     return std::sqrt(lenghtSquared());
 }
 
+bool Vector3d::aproximalyZero() const {
+    const double min = 1e-8;
+
+    return ( fabs(array[0]) < min) &&
+            (fabs(array[1]) < min) &&
+            (fabs(array[2]) < min);
+}
+
 std::ostream& operator << (std::ostream &out, const Vector3d &v) {
     return out << v.array[0] << ' ' << v.array[1] << ' ' << v.array[2];
 }
@@ -70,15 +78,15 @@ Vector3d operator * (const Vector3d &v1, const Vector3d &v2) {
                     v1.array[2] * v2.array[2]);
 }
 
-Vector3d operator * (double t, const Vector3d &v) {
+Vector3d operator * (const double t, const Vector3d &v) {
     return Vector3d(t * v.array[0], t * v.array[1], t * v.array[2]);
 }
 
-Vector3d operator * (const Vector3d &v, double t) {
+Vector3d operator * (const Vector3d &v, const double t) {
     return t * v;
 }
 
-Vector3d operator / (Vector3d v, double t) {
+Vector3d operator / (Vector3d v, const double t) {
     return (1/t) * v;
 }
 
@@ -114,6 +122,9 @@ Vector3d randomInHemisphere(const Vector3d &normal) {
     return (dot(in_unit_sphere, normal) > 0.0)? in_unit_sphere : -in_unit_sphere;
 }
 
+Vector3d reflect(const Vector3d &v1, const Vector3d &v2) {
+    return v1 - 2 * dot(v1, v2) * v2;
+}
 
 Vector3d randomInUnitSphere() {
     Vector3d p = Vector3d::random(-1,1);
