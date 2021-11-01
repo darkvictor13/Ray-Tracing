@@ -7,10 +7,13 @@
 #include <fstream>
 #include <iomanip>
 
-#include "setup.hpp"
+#include "../headers/debug.hpp"
 #include "../vector_3d/vector_3d.hpp"
 #include "../utils/numbers.hpp"
 #include "../ray/ray.hpp"
+
+#define IMAGE_HEIGHT static_cast<int>(IMAGE_WIDTH / ASPECT_RATIO)
+#define SAMPLES_PER_PIXEL 100
 
 class PpmWriter {
 private:

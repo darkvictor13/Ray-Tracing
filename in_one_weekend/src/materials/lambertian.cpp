@@ -4,6 +4,10 @@ Lambertian::Lambertian() : a() {}
 
 Lambertian::Lambertian(Color c) : a(c) {}
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+// o raio de entrada r_in não é utilizado nessa função
+// porém utilizado no Material metal, por isso desativo esse warning
 bool Lambertian::scatter(const Ray &r_in, const HitRecord &rec,
     Color &attenuation, Ray &scattered) const {
 
@@ -18,4 +22,4 @@ bool Lambertian::scatter(const Ray &r_in, const HitRecord &rec,
     attenuation = a;
     return true;
 }
-
+#pragma GCC diagnostic pop

@@ -2,7 +2,7 @@ CC=g++
 
 LIBS=-lm -lpthread
 
-CXXFLAGS= -std=c++20 -c
+CXXFLAGS= -std=c++17 -c -Wall -Wextra
 # para executar mais rápido
 CXXFLAGS += -O3
 # para degugar com gdb
