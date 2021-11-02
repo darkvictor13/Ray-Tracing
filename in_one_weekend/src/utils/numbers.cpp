@@ -7,3 +7,8 @@ double utils::randomDouble() {
 double utils::randomDouble(double min, double max) {
 	return min + (max-min)*randomDouble();
 }
+
+double utils::degreesToRadians(double rad) {
+    return rad * M_PI / 180.0;
+}
+

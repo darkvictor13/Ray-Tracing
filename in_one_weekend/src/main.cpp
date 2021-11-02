@@ -7,6 +7,7 @@
 #include <string>
 #include <thread>
 
+#include "headers/user_config.hpp"
 #include "vector_3d/vector_3d.hpp"
 #include "ray/ray.hpp"
 
@@ -22,10 +23,12 @@
 #include "utils/numbers.hpp"
 
 #include "camera/camera.hpp"
-#include "camera/ppm_writer.hpp"
+#include "ppm_writer/ppm_writer.hpp"
 
 #include "headers/debug.hpp"
 #include "utils/scope_timer.hpp"
+
+#define MAX_DEPTH 50
 
 Color rayColor (const Ray& r, const Hittable& world, int8_t depht);
 
@@ -34,13 +37,14 @@ inline double hitSphere(const Point3d& center, double radius, const Ray& r);
 std::string getFileName();
 
 void generateImagePart(const uint16_t id, const int height_initial, const int height_final,
-        const HittableList &world, Color m[][IMAGE_WIDTH], const Camera &cam);
+        const HittableList &world, ColorRep m[][IMAGE_WIDTH], const Camera &cam);
 
 int main (int argc, char *argv[]) {
 #if DEBUG_VAR
     ScopeTimer timer(__func__);
 #endif
-    Color image[IMAGE_HEIGHT][IMAGE_WIDTH];
+    ColorRep image[IMAGE_HEIGHT][IMAGE_WIDTH];
+    //Camera cam(90, Vector3d(0,1,0), Point3d(0,0,-1), Point3d(-2,2,1));
     Camera cam;
     HittableList world(4);
     auto material_ground = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
@@ -70,8 +74,20 @@ int main (int argc, char *argv[]) {
     debug("Construindo as Threads\n");
     std::vector<std::thread> threds;
     {
-        const int height_sep = IMAGE_HEIGHT / CPU_CORES;
-        const int lim = CPU_CORES-1;
+        auto concurrent_threads = std::thread::hardware_concurrency();
+
+        if (concurrent_threads != CPU_CORES) {
+            std::cout << "No arquivo de config está definido que vc tem " <<
+                CPU_CORES << " threads,\nmas o c++ diz que vc tem " << concurrent_threads <<
+                " quantas threads seu computador tem?\n(Quantidade de threads da CPU) -> ";
+
+            unsigned int input_number_of_concurrent_threads;
+            std::cin >> input_number_of_concurrent_threads;
+            concurrent_threads = input_number_of_concurrent_threads;
+        }
+
+        const int height_sep = IMAGE_HEIGHT / concurrent_threads;
+        const int lim = concurrent_threads-1;
         int height_sum = 0;
 
         for (uint16_t i = 0; i < lim; i++) {
@@ -84,7 +100,7 @@ int main (int argc, char *argv[]) {
         }
         threds.push_back(std::thread(
                     generateImagePart,
-                    static_cast<uint16_t>(CPU_CORES-1),
+                    static_cast<uint16_t>(concurrent_threads-1),
                     height_sum, IMAGE_HEIGHT,
                     world, image, cam)
                 );
@@ -106,7 +122,7 @@ Color rayColor(const Ray& r, const Hittable& world, int8_t depht) {
     if (depht < 1) {
         return Color(0, 0, 0);
     }
-    if (world.hit(r, 0.001, utils::INF, rec)) {
+    if (world.hit(r, 0.001, INF, rec)) {
         Ray scattered;
         Color attenuation;
         if (rec.material->scatter(r, rec, attenuation, scattered)) {
@@ -145,7 +161,7 @@ std::string getFileName() {
 }
 
 void generateImagePart(const uint16_t id, const int height_initial, const int height_final,
-        const HittableList &world, Color m[][IMAGE_WIDTH], const Camera &cam) {
+        const HittableList &world, ColorRep m[][IMAGE_WIDTH], const Camera &cam) {
 #if DEBUG_VAR
     ScopeTimer timer("Thread " + std::to_string(id) + ", " + __func__);
 #endif

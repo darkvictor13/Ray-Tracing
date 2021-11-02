@@ -4,6 +4,7 @@
 #include "../headers/debug.hpp"
 #include "../vector_3d/vector_3d.hpp"
 #include "../ray/ray.hpp"
+#include "../utils/numbers.hpp"
 
 #define VIEWPORT_HEIGHT 2.0
 #define VIEWPORT_WIDTH  (ASPECT_RATIO * VIEWPORT_HEIGHT)
@@ -16,11 +17,14 @@ private:
     Vector3d vertical;
     Vector3d lower_left_corner;
 public:
-	Camera();
+    Camera(double fov = 90,
+            const Vector3d &up = Vector3d(0, 1, 0),
+            const Point3d &look_at = Point3d(0, 0, -1),
+            const Point3d &look_from = Point3d(0, 0, 0));
 
-	Ray getRay(double u, double v) const;
+    Ray getRay(double u, double v) const;
 
-	~Camera();
+    ~Camera();
 };
 
 #endif // CAMERA

@@ -12,15 +12,46 @@
  * @date 01/11/2021
  */
 
+#define INVALID_VALUE -1
+
+/**
+ * @brief Define se o programa deve ou não mostrar
+ * informações de Debug
+ */
 #define DEBUG_VAR 1
 
-#define IMAGE_PATH        "../images/"
+/**
+ * @brief Caminho para a pasta onde as imagens devem ser salvas
+ */
+#define IMAGE_PATH "../images/"
+/**
+ * @brief Caso o usuário não queira dar um nome a imagem,
+ * esse será o nome da mesma.
+ */
 #define DEFAULT_FILE_NAME "bola.ppm"
 
+/**
+ * @brief Largura da imagem.
+ * 
+ * Quantidade de colunas em pixels
+ */
 #define IMAGE_WIDTH  400
+/**
+ * @brief Define a proporção entre linhas e colunas da imagem
+ */
 #define ASPECT_RATIO (16.0 / 9.0)
 
-#define MAX_DEPTH 50
+/**
+ * @brief Quantidade de nucleos que sua CPU possui
+ * para processamento paralelo
+ */
 #define CPU_CORES 4
+
+#if DEBUG_VAR == INVALID_VALUE || \
+IMAGE_WIDTH == INVALID_VALUE || \
+MAX_DEPTH == INVALID_VALUE || CPU_CORES == INVALID_VALUE
+
+#error Arquivo de configuracao nao foi editado de forma correta
+#endif
 
 #endif // USER_CONFIG
