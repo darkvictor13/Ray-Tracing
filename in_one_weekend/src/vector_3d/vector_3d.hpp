@@ -55,6 +55,8 @@ struct Vector3d {
 
 Vector3d randomInUnitSphere();
 
+Vector3d randomInUnitDisk();
+
 using Point3d = Vector3d;
 using Color = Vector3d;
 

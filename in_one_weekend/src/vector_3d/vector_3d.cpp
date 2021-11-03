@@ -140,3 +140,11 @@ Vector3d randomInUnitSphere() {
     }
     return p;
 }
+
+Vector3d randomInUnitDisk() {
+    Vector3d p = Vector3d(randomDouble(-1, 1), randomDouble(-1, 1), 0);
+    while (p.lenghtSquared() >= 1) {
+        p = Vector3d(randomDouble(-1, 1), randomDouble(-1, 1), 0);
+    }
+    return p;
+}
