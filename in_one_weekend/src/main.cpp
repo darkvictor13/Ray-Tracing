@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <thread>
+#include <utility>
 
 #include "headers/user_config.hpp"
 #include "vector_3d/vector_3d.hpp"
@@ -36,6 +37,12 @@ inline double hitSphere(const Point3d& center, double radius, const Ray& r);
 
 std::string getFileName();
 
+std::pair<Point3d, Point3d> getCameraPosition();
+
+bool getUserResponse(bool default_return);
+
+Point3d getUserInputPoint();
+
 void generateImagePart(const uint16_t id, const int height_initial, const int height_final,
         const HittableList &world, ColorRep m[][IMAGE_WIDTH], const Camera &cam);
 
@@ -44,13 +51,7 @@ int main (int argc, char *argv[]) {
     ScopeTimer timer(__func__);
 #endif
     ColorRep image[IMAGE_HEIGHT][IMAGE_WIDTH];
-    //Camera cam(90, Vector3d(0,1,0), Point3d(0,0,-1), Point3d(-2,2,1));
-    Camera cam;
-    HittableList world(4);
-    auto material_ground = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
-    auto material_center = std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-    auto material_left   = std::make_shared<Dieletric>(1.5);
-    auto material_right  = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
+    HittableList world;
 
     std::string file_name = (argc == 2? argv[1] : getFileName());
     {
@@ -61,15 +62,14 @@ int main (int argc, char *argv[]) {
         file_name.insert(0, IMAGE_PATH);
     }
 
-    world.insert(std::make_shared<Sphere>(Point3d( 0.0, -100.5, -1.0), 100.0, material_ground));
-    world.insert(std::make_shared<Sphere>(Point3d( 0.0,    0.0, -1.0),   0.5, material_center));
-    world.insert(std::make_shared<Sphere>(Point3d(-1.0,    0.0, -1.0),   0.5, material_left));
-    world.insert(std::make_shared<Sphere>(Point3d(-1.0,    0.0, -1.0),  -0.4, material_left));
-    world.insert(std::make_shared<Sphere>(Point3d( 1.0,    0.0, -1.0),   0.5, material_right));
+    world.generateRandomScene();
 
     debug("Nome do arquivo " << file_name << '\n');
     PpmWriter writer(file_name);
     writer.writeHeader();
+
+    auto cam_config = getCameraPosition();
+    Camera cam(cam_config.first,cam_config.second, Vector3d(0, 1, 0), 20, 0.1);
 
     debug("Construindo as Threads\n");
     std::vector<std::thread> threds;
@@ -89,6 +89,8 @@ int main (int argc, char *argv[]) {
         const int height_sep = IMAGE_HEIGHT / concurrent_threads;
         const int lim = concurrent_threads-1;
         int height_sum = 0;
+
+        threds.reserve(concurrent_threads);
 
         for (uint16_t i = 0; i < lim; i++) {
             threds.push_back(std::thread(
@@ -147,11 +149,9 @@ double hitSphere(const Point3d& center, double radius, const Ray& r) {
 
 std::string getFileName() {
     using namespace std;
-    char input;
     string file_name;
     cout << "Deseja inserir o nome do arquivo? [s/N] ";
-    cin.get(input);
-    if (tolower(input) == 's') {
+    if (getUserResponse(false)) {
         cout << "Entre com o nome do arquivo: ";
         cin >> file_name;
     }else{
@@ -181,5 +181,50 @@ void generateImagePart(const uint16_t id, const int height_initial, const int he
             }
             m[i][j] = pixel_color;
         }
+        debug("Finalizado a linha " << i << '\n');
     }
+}
+
+std::pair<Point3d, Point3d> getCameraPosition() {
+    Point3d look_from;
+    Point3d look_at;
+    std::cout << "Deseja entrar com informações da câmera? [S/n] ";
+    if (getUserResponse(true)) {
+        std::cout << "Em que posição está localizada a câmera?\n";
+        look_from = getUserInputPoint();
+        std::cout << "Para que ponto a câmera está apontando?\n";
+        look_at = getUserInputPoint();
+    }else {
+        look_from = Point3d(13, 2, 3);
+        look_at = Point3d(0, 0, 0);
+    }
+    std::pair<Point3d, Point3d> ret(look_from, look_at);
+    return ret;
+}
+
+bool getUserResponse(bool default_return) {
+    char input;
+    std::cin.get(input);
+    input = std::tolower(input);
+    if (input == 's') {
+        return true;
+    }
+    if (input == 'n') {
+        return false;
+    }
+    return default_return;
+}
+
+Point3d getUserInputPoint() {
+    using namespace std;
+    double x, y, z;
+
+    cout << "Coordenada x: ";
+    cin >> x;
+    cout << "Coordenada y: ";
+    cin >> y;
+    cout << "Coordenada z: ";
+    cin >> z;
+
+    return {x, y, z};
 }

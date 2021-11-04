@@ -38,18 +38,18 @@ void PpmWriter::writeHeader() {
 }
 
 void PpmWriter::writeColor(Color color) {
-	double red = color.red;
-	double green = color.green;
-	double blue = color.blue;
+    double red = color.red;
+    double green = color.green;
+    double blue = color.blue;
 
-	double scale = 1.0 / _samples_per_pixel;
+    double scale = 1.0 / _samples_per_pixel;
     red = std::sqrt(scale * red);
     green = std::sqrt(scale * green);
     blue = std::sqrt(scale * blue);
 
     file_buffer << static_cast<int>(256 * std::clamp(red, 0.0, 0.999))   << ' '
-        		<< static_cast<int>(256 * std::clamp(green, 0.0, 0.999)) << ' '
-        		<< static_cast<int>(256 * std::clamp(blue, 0.0, 0.999))  << '\n';
+                << static_cast<int>(256 * std::clamp(green, 0.0, 0.999)) << ' '
+                << static_cast<int>(256 * std::clamp(blue, 0.0, 0.999))  << '\n';
 }
 
 void PpmWriter::writeImage(const Color image[][IMAGE_WIDTH]) {

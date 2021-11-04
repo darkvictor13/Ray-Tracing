@@ -7,13 +7,13 @@
 struct Material;
 
 struct HitRecord {
-	Point3d point;
-	Vector3d normal;
+    Point3d point;
+    Vector3d normal;
     std::shared_ptr<Material> material;
     bool front_face;
-	double t;
+    double t;
 
-	void setFaceNormal(const Ray& r,
+    void setFaceNormal(const Ray& r,
             const Vector3d& outward_normal);
 };
 

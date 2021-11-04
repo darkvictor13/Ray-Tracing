@@ -1,12 +1,13 @@
 #include "hittable_list.hpp"
 
+using utils::randomDouble;
+
 HittableList::HittableList(int min_qnt) {
 	objects.reserve(min_qnt);
 }
 
-HittableList::HittableList(std::shared_ptr<Hittable> obj) :
-	objects {obj} {
-}
+HittableList::HittableList(std::shared_ptr<Hittable> obj)
+    : objects {obj} {}
 
 void HittableList::insert(std::shared_ptr<Hittable> obj) {
     objects.push_back(obj);
@@ -16,10 +17,10 @@ void HittableList::clear() {
 	objects.clear();
 }
 
-bool HittableList::hit(const Ray& r, double t_min, double t_max,
-						HitRecord& rec) const {
+bool HittableList::hit(const Ray& r,
+        double t_min, double t_max, HitRecord& rec) const {
 
-	HitRecord temp_rec;
+    HitRecord temp_rec;
     bool hit_anything = false;
     auto closest_so_far = t_max;
 
@@ -32,8 +33,54 @@ bool HittableList::hit(const Ray& r, double t_min, double t_max,
     }
 
     return hit_anything;
-
 }
+
+void HittableList::generateRandomScene() {
+    if (objects.size()) {
+        objects.clear();
+    }
+    objects.reserve(484);
+    auto ground_material = std::make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
+    objects.push_back(std::make_shared<Sphere>(Point3d(0,-1000,0), 1000, ground_material));
+
+    for (int a = -11; a < 11; a++) {
+        for (int b = -11; b < 11; b++) {
+            auto choose_mat = randomDouble();
+            Point3d center(a + 0.9*randomDouble(), 0.2, b + 0.9*randomDouble());
+
+            if ((center - Point3d(4, 0.2, 0)).lenght() > 0.9) {
+                std::shared_ptr<Material> sphere_material;
+
+                if (choose_mat < 0.8) {
+                    // diffuse
+                    auto albedo = Color::random() * Color::random();
+                    sphere_material = std::make_shared<Lambertian>(albedo);
+                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                } else if (choose_mat < 0.95) {
+                    // metal
+                    auto albedo = Color::random(0.5, 1);
+                    auto fuzz = randomDouble(0, 0.5);
+                    sphere_material = std::make_shared<Metal>(albedo, fuzz);
+                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                } else {
+                    // glass
+                    sphere_material = std::make_shared<Dieletric>(1.5);
+                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                }
+            }
+        }
+    }
+
+    auto material1 = std::make_shared<Dieletric>(1.5);
+    objects.push_back(std::make_shared<Sphere>(Point3d(0, 1, 0), 1.0, material1));
+
+    auto material2 = std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
+    objects.push_back(std::make_shared<Sphere>(Point3d(-4, 1, 0), 1.0, material2));
+
+    auto material3 = std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
+    objects.push_back(std::make_shared<Sphere>(Point3d(4, 1, 0), 1.0, material3));
+}
+
 
 HittableList::~HittableList() {
     clear();

@@ -2,6 +2,11 @@
 #define HITTABLE_LIST
 
 #include "hittable.hpp"
+#include "sphere.hpp"
+#include "../materials/dieletric.hpp"
+#include "../materials/lambertian.hpp"
+#include "../materials/metal.hpp"
+#include "../materials/material.hpp"
 
 #include <memory>
 #include <vector>
@@ -17,6 +22,8 @@ struct HittableList : public Hittable {
 
 	virtual bool hit(const Ray& r, double t_min, double t_max,
 					HitRecord& rec) const override;
+
+    void generateRandomScene();
 
 	~HittableList();
 };
