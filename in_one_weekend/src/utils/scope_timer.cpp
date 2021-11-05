@@ -14,8 +14,10 @@ ScopeTimer::~ScopeTimer() {
 
     debug (scope_name << " executou por: ");
     if (print_in_seconds) {
-        debug (
-            static_cast<duration<double>>(elapsed_time).count() << ' ');
+        const duration<double> to_sec = elapsed_time;
+        const double sec = to_sec.count();
+        const double min = sec / 60;
+        debug (min << "minutos e " << sec << ' ');
     }else {
         debug (elapsed_time.count() << " nano");
     }
