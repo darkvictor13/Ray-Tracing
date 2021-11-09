@@ -6,5 +6,5 @@ Point3d Ray::at(double t) const {
 
 Ray::Ray() : origin(), direction() {}
 
-Ray::Ray(Point3d origin, Vector3d direction)
-: origin(origin), direction(direction) {}
+Ray::Ray(const Point3d &origin, const Vector3d &direction, const double time)
+: origin(origin), direction(direction), time(time) {}

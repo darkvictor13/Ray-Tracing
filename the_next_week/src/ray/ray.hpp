@@ -6,9 +6,10 @@
 struct Ray {
 	Point3d origin;
 	Vector3d direction;
+	double time;
 
 	Ray();
-	Ray(Point3d origin, Vector3d direction);
+	Ray(const Point3d &origin, const Vector3d &direction, const double time = 0.0);
 
 	Point3d at(double t) const;
 };

@@ -20,11 +20,13 @@ private:
     Vector3d u;
     Vector3d v;
     double lens_radius;
+    double initial_time, final_time;
 public:
     Camera( const Point3d &look_from = Point3d(0, 0, 0),
             const Point3d &look_at = Point3d(0, 0, -1),
             const Vector3d &up = Vector3d(0, 1, 0),
-            double fov = 90, double aperture = 0.0);
+            double fov = 90, double aperture = 0.0,
+            double initial_time = 0.0, double final_time = 0.0);
 
     Ray getRay(double u, double v) const;
 

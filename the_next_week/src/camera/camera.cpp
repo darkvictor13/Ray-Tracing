@@ -3,7 +3,8 @@
 Camera::Camera( const Point3d &look_from,
         const Point3d &look_at,
         const Vector3d &up,
-        double fov, double aperture) {
+        double fov, double aperture,
+        double initial_time = 0.0, double final_time = 0.0) {
 
     double h = tan(utils::degreesToRadians(fov) / 2);
     double viewport_height = 2.0 * h;
@@ -20,12 +21,17 @@ Camera::Camera( const Point3d &look_from,
     lower_left_corner = origin - horizontal/2 - vertical/2 - focus_dist * w;
 
     lens_radius = aperture / 2;
+    this->initial_time = initial_time;
+    this->final_time = final_time;
 }
 
 Ray Camera::getRay(double s, double t) const {
     Vector3d rd = lens_radius * randomInUnitDisk();
     Vector3d offset = u * rd.x + v * rd.y;
-    return Ray(origin + offset, lower_left_corner + s*horizontal + t*vertical - origin - offset);
+
+    return Ray(origin + offset,
+        lower_left_corner + s*horizontal + t*vertical - origin - offset,
+        utils::randomDouble(initial_time, final_time));
 }
 
 Camera::~Camera() {}
