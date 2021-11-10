@@ -19,7 +19,7 @@ bool Dieletric::scatter(const Ray &r_in, const HitRecord &rec,
     else
         direction = refract(unit_direction, rec.normal, refraction_ratio);
 
-    scattered = Ray(rec.point, direction);
+    scattered = Ray(rec.point, direction, r_in.time);
     return true;
 }
 

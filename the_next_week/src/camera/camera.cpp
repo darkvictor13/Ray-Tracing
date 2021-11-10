@@ -1,10 +1,10 @@
 #include "camera.hpp"
 
-Camera::Camera( const Point3d &look_from,
-        const Point3d &look_at,
-        const Vector3d &up,
-        double fov, double aperture,
-        double initial_time = 0.0, double final_time = 0.0) {
+Camera::Camera(const Point3d &look_from,
+            const Point3d &look_at,
+            const Vector3d &up,
+            double fov, double aperture,
+            double initial_time, double final_time) {
 
     double h = tan(utils::degreesToRadians(fov) / 2);
     double viewport_height = 2.0 * h;

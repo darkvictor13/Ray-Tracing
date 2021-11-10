@@ -5,14 +5,16 @@
 #include "../ray/ray.hpp"
 #include "../objects/hittable.hpp"
 
+/**
+ * @brief Classe abstrata para todos os materiais
+ */
 struct Material {
-    virtual bool scatter
-            (
-                const Ray &r_in,
-                const HitRecord &rec,
-                Color &attenuation,
-                Ray &scattered
-            ) const = 0;
+    virtual bool scatter(
+        const Ray &r_in,
+        const HitRecord &rec,
+        Color &attenuation,
+        Ray &scattered
+    ) const = 0;
 };
 
 

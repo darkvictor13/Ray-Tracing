@@ -3,18 +3,19 @@
 
 #include "material.hpp"
 
-struct Lambertian : Material {
+class Lambertian : public Material {
+private:
     Color a;
 
+public:
     Lambertian();
     Lambertian(Color c);
 
     virtual bool scatter(
-            const Ray &r_in,
-            const HitRecord &rec,
-            Color &attenuation,
-            Ray &scattered
-        )const override;
+        const Ray &r_in,
+        const HitRecord &rec,
+        Color &attenuation,
+        Ray &scattered) const override;
 };
 
 

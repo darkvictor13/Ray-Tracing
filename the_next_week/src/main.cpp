@@ -13,7 +13,7 @@
 #include "ray/ray.hpp"
 
 #include "objects/hittable.hpp"
-#include "objects/sphere.hpp"
+#include "objects/sphere_static.hpp"
 #include "objects/hittable_list.hpp"
 
 #include "materials/material.hpp"
@@ -69,7 +69,7 @@ int main (int argc, char *argv[]) {
     writer.writeHeader();
 
     auto cam_config = getCameraPosition();
-    Camera cam(cam_config.first,cam_config.second, Vector3d(0, 1, 0), 20, 0.1);
+    Camera cam(cam_config.first, cam_config.second, Vector3d(0, 1, 0), 20, 0.1, 0.0, 1.0);
 
     debug("Construindo as Threads\n");
     std::vector<std::thread> threds;

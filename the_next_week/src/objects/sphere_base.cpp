@@ -1,12 +1,15 @@
-#include "sphere.hpp"
+#include "sphere_base.hpp"
 
-Sphere::Sphere() : center(), radius() {}
+SphereBase::SphereBase() : radius() {
+}
 
-Sphere::Sphere(Point3d center, double radius, std::shared_ptr<Material> m) :
-	center(center), radius(radius), material(m) {}
+SphereBase::SphereBase(double radius, std::shared_ptr<Material> material)
+						: radius(radius), material(material) {
+}
 
-bool Sphere::hit(const Ray& r, double t_min, double t_max,
-				HitRecord& rec) const {
+bool SphereBase::sphereHit(const Ray& r, double t_min, double t_max,
+							HitRecord& rec, const Point3d &center) const {
+
 	Vector3d oc = r.origin - center;
     double a = r.direction.lenghtSquared();
     double half_b = dot(oc, r.direction);
@@ -32,4 +35,8 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max,
     rec.material = material;
 
     return true;
+
+}
+
+SphereBase::~SphereBase() {
 }

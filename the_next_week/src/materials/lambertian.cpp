@@ -18,7 +18,7 @@ bool Lambertian::scatter(const Ray &r_in, const HitRecord &rec,
         scatter_direction = rec.normal;
     }
 
-    scattered = Ray(rec.point, scatter_direction);
+    scattered = Ray(rec.point, scatter_direction, r_in.time);
     attenuation = a;
     return true;
 }

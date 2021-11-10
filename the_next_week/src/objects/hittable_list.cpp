@@ -41,7 +41,7 @@ void HittableList::generateRandomScene() {
     }
     objects.reserve(488);
     auto ground_material = std::make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
-    objects.push_back(std::make_shared<Sphere>(Point3d(0,-1000,0), 1000, ground_material));
+    objects.push_back(std::make_shared<SphereStatic>(Point3d(0,-1000,0), 1000, ground_material));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
@@ -55,30 +55,32 @@ void HittableList::generateRandomScene() {
                     // diffuse
                     auto albedo = Color::random() * Color::random();
                     sphere_material = std::make_shared<Lambertian>(albedo);
-                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                    auto center1 = center + Vector3d(0, utils::randomDouble(0,0.5), 0);
+                    objects.push_back(std::make_shared<SphereMoving>(
+                        center, center1, 0.0, 1, 0.2, sphere_material));
                 } else if (choose_mat < 0.95) {
                     // metal
                     auto albedo = Color::random(0.5, 1);
                     auto fuzz = randomDouble(0, 0.5);
                     sphere_material = std::make_shared<Metal>(albedo, fuzz);
-                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                    objects.push_back(std::make_shared<SphereStatic>(center, 0.2, sphere_material));
                 } else {
                     // glass
                     sphere_material = std::make_shared<Dieletric>(1.5);
-                    objects.push_back(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                    objects.push_back(std::make_shared<SphereStatic>(center, 0.2, sphere_material));
                 }
             }
         }
     }
 
     auto material1 = std::make_shared<Dieletric>(1.5);
-    objects.push_back(std::make_shared<Sphere>(Point3d(0, 1, 0), 1.0, material1));
+    objects.push_back(std::make_shared<SphereStatic>(Point3d(0, 1, 0), 1.0, material1));
 
     auto material2 = std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
-    objects.push_back(std::make_shared<Sphere>(Point3d(-4, 1, 0), 1.0, material2));
+    objects.push_back(std::make_shared<SphereStatic>(Point3d(-4, 1, 0), 1.0, material2));
 
     auto material3 = std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
-    objects.push_back(std::make_shared<Sphere>(Point3d(4, 1, 0), 1.0, material3));
+    objects.push_back(std::make_shared<SphereStatic>(Point3d(4, 1, 0), 1.0, material3));
 }
 
 
