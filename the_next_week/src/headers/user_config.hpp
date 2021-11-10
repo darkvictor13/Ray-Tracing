@@ -35,7 +35,7 @@
  * 
  * Quantidade de colunas em pixels
  */
-#define IMAGE_WIDTH  1920
+#define IMAGE_WIDTH  400
 /**
  * @brief Define a proporção entre linhas e colunas da imagem
  */

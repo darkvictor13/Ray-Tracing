@@ -13,5 +13,16 @@ bool SphereStatic::hit(const Ray& r, double t_min, double t_max,
 	return sphereHit(r, t_min, t_max, rec, center);
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+bool SphereStatic::boundingBox(double initial_time,
+			double final_time, Aabb &out_box) const {
+
+	const Vector3d limits(radius, radius, radius);
+	out_box = Aabb(center - limits, center + limits);
+	return true;
+}
+#pragma GCC diagnostic pop
+
 SphereStatic::~SphereStatic() {
 }

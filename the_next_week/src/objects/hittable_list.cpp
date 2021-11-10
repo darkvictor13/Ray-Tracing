@@ -35,6 +35,31 @@ bool HittableList::hit(const Ray& r,
     return hit_anything;
 }
 
+bool HittableList::boundingBox(double initial_time,
+			double final_time, Aabb &out_box) const {
+    
+    if (objects.empty()) {
+        return false;
+    }
+
+    Aabb temp;
+    bool is_fist_box = true;
+
+    for (const auto &it : objects) {
+        if (!it->boundingBox(initial_time, final_time, out_box)) {
+            return false;
+        }
+        if (is_fist_box) {
+            out_box = temp;
+            is_fist_box = false;
+        }else {
+            out_box = surroundingBox(temp, out_box);
+        }
+    }
+
+    return true;
+}
+
 void HittableList::generateRandomScene() {
     if (objects.size()) {
         objects.clear();

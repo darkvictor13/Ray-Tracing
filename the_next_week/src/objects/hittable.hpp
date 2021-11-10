@@ -2,6 +2,7 @@
 #define HITTABLE
 
 #include "../ray/ray.hpp"
+#include "../aabb/aabb.hpp"
 #include <memory>
 
 struct Material;
@@ -26,8 +27,9 @@ struct HitRecord {
 struct Hittable {
     virtual bool hit(const Ray& r, double t_min, double t_max,
             HitRecord& rec) const = 0;
+
+    virtual bool boundingBox(double initial_time,
+            double final_time, Aabb &out_box) const = 0;
 };
-
-
 
 #endif // HITTABLE

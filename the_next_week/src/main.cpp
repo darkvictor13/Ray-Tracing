@@ -1,12 +1,8 @@
 #include <iomanip>
 #include <cmath>
-#include <math.h>
 #include <iostream>
-#include <cctype>
-#include <fstream>
 #include <string>
 #include <thread>
-#include <utility>
 
 #include "headers/user_config.hpp"
 #include "vector_3d/vector_3d.hpp"
@@ -162,6 +158,7 @@ std::string getFileName() {
 
 void generateImagePart(const uint16_t id, const int height_initial, const int height_final,
         const HittableList &world, ColorRep m[][IMAGE_WIDTH], const Camera &cam) {
+
 #if DEBUG_VAR
     ScopeTimer timer("Thread " + std::to_string(id) + ", " + __func__);
 #endif
@@ -181,7 +178,7 @@ void generateImagePart(const uint16_t id, const int height_initial, const int he
             }
             m[i][j] = pixel_color;
         }
-        debug("Finalizado a linha " << i << '\n');
+        debug("Finalizado a linha " << std::setfill('0') << std::setw(3) << i << '\n');
     }
 }
 
