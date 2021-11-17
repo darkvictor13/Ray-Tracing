@@ -1,12 +1,7 @@
 #ifndef PPM_WRITER
 #define PPM_WRITER
 
-#include <algorithm>
-#include <ostream>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
+#include "../pch/std.hpp"
 
 #include "../headers/debug.hpp"
 #include "../vector_3d/vector_3d.hpp"
@@ -22,7 +17,6 @@ struct ColorRep {
     ColorRep();
     ColorRep(uint8_t r, uint8_t g, uint8_t b);
     ColorRep(const Color color);
-
 
     friend std::ostream& operator << (std::ostream &out, const ColorRep &c);
 

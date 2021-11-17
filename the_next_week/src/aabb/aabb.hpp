@@ -4,11 +4,10 @@
 #include "../vector_3d/vector_3d.hpp"
 #include "../ray/ray.hpp"
 
-class Aabb {
-private:
+struct Aabb {
 	Point3d minimum;
 	Point3d maximum;
-public:
+
 	Aabb();
 	Aabb(const Point3d &begin, const Point3d &end);
 

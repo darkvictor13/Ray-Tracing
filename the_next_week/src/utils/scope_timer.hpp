@@ -1,10 +1,7 @@
 #ifndef SCOPE_TIMER
 #define SCOPE_TIMER
 
-#include <iostream>
-#include <chrono>
-#include <thread>
-
+#include "../pch/std.hpp"
 #include "../headers/debug.hpp"
 
 class ScopeTimer {

@@ -17,6 +17,11 @@ void HittableList::clear() {
 	objects.clear();
 }
 
+const std::vector<std::shared_ptr<Hittable>> &
+HittableList::getList() const {
+	return objects;
+}
+
 bool HittableList::hit(const Ray& r,
         double t_min, double t_max, HitRecord& rec) const {
 

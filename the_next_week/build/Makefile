@@ -2,14 +2,17 @@ CXX=g++
 
 LDFLAGS=-lm -lpthread
 
-CXXFLAGS= -std=c++17 -Wall -Wextra -Werror
-# para executar mais rápido
+CXXFLAGS= -std=c++17 -Wall -Wextra
+#warnings tradados como erro:
+# CXXFLAGS += -Werror
+
+# para executar mais rápido:
 CXXFLAGS += -O3
 
-# para degugar com gdb
+# para degugar com gdb:
 # CXXFLAGS += -g
 
-# Checar memory leaks
+# Checar memory leaks:
 CXXFLAGS += -fsanitize=address
 LDFLAGS += -fsanitize=address
 
@@ -21,8 +24,11 @@ OBJ_DIR=./objs
 
 SRC := $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/*/*.cpp)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
+PCH := $(wildcard $(SRC_DIR)/pch/*.hpp $(SRC_DIR)/headers/*.hpp)
 
 OUT=main.out
+
+.PHONY:all clean deploy p run
 
 all: $(OUT)
 
@@ -39,5 +45,9 @@ clean:
 deploy:
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT) $(LIBS)
 
+p:
+	$(CXX) $(CXXFLAGS) $(PCH)
+
 run: all
 	./$(OUT)
+

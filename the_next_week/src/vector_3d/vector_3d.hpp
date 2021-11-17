@@ -1,8 +1,7 @@
 #ifndef VECTOR
 #define VECTOR
 
-#include <iostream>
-#include <cmath>
+#include "../pch/std.hpp"
 #include "../utils/numbers.hpp"
 
 struct Vector3d {

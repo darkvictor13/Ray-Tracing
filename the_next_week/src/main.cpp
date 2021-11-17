@@ -1,8 +1,4 @@
-#include <iomanip>
-#include <cmath>
-#include <iostream>
-#include <string>
-#include <thread>
+#include "pch/std.hpp"
 
 #include "headers/user_config.hpp"
 #include "vector_3d/vector_3d.hpp"

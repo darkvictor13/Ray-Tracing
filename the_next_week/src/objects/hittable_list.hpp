@@ -9,8 +9,7 @@
 #include "../materials/metal.hpp"
 #include "../materials/material.hpp"
 
-#include <memory>
-#include <vector>
+#include "../pch/std.hpp"
 
 class HittableList : public Hittable {
 private:
@@ -22,6 +21,8 @@ public:
 
 	void insert(std::shared_ptr<Hittable> obj);
 	void clear();
+
+	const std::vector<std::shared_ptr<Hittable>>& getList() const;
 
 	virtual bool hit(const Ray& r, double t_min, double t_max,
 					HitRecord& rec) const override;

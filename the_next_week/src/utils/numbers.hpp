@@ -8,7 +8,6 @@
 #define INF std::numeric_limits<double>::infinity()
 
 namespace utils {
-
 	double randomDouble();
 	double randomDouble(double min, double max);
     double degreesToRadians(double rad);
