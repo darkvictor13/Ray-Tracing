@@ -13,12 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: go_to
-      run: cd the_next_week/build
+    #- name: go_to
+      #run: cd the_next_week/build
     #- name: configure
       #run: ./configure
     - name: make
-      run: make
+      run: cd the_next_week/build/ && make
     #- name: make check
       #run: make check
     #- name: make distcheck
