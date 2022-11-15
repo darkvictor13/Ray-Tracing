@@ -13,3 +13,4 @@ utilizando meu estilo de programação com o padrão c++17.
 - Multi Thread;
 - Debug e timer;
 - Classe para escrever o arquivo da imagem.
+
